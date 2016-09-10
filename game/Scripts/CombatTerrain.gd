@@ -1,12 +1,11 @@
-
 extends Sprite
 
 var mapsize = {}
 var ncol = 20
 var nrow = 20
-var cellsize = 40
+var cellsize = 25
 var base_terrain_map = {}
-var grid_offset = Vector2(100,0)
+var grid_offset = Vector2(250,100)
 
 func _ready():
 	mapsize["width"] = self.get_texture().get_size().width*self.get_scale().x
@@ -46,19 +45,20 @@ func is_available_tile(tile):
 func terrain_map_init():
 	## Note : The map is currently initialized as a uniform matrix of ones, we will want in general
 	## to be able to load it from a file so that multiple maps can be easily created and stored
-	base_terrain_map=get_node("/root/globals").matrix_init(self.nrow,self.ncol,1)
+	base_terrain_map = get_node("/root/globals").matrix_init(self.nrow,self.ncol,1)
+
 
 func get_terrain_map():
-	## Note : the map is currently computed modifying the terrain map with the position of all the 
-	## children of Player1 and Player2, we might want to have children for the players that are
-	## not to be considered an obstacle, consider movable obstacles that are not children of the player nodes
-	## One possibility is to get each one of these items that must be considered as members of a group: "Obstacles"
-	## so that we can iterate on each one in the same way
+	# Note : the map is currently computed modifying the terrain map with the position of all the 
+	# children of Player1 and Player2, we might want to have children for the players that are
+	# not to be considered an obstacle, consider movable obstacles that are not children of the player nodes
+	# One possibility is to get each one of these items that must be considered as members of a group: "Obstacles"
+	# so that we can iterate on each one in the same way
 	
-	## BUG_REPORT 
-	## The terrain_map was instantiated as a reference to the base_terrain_map instead of its copy,
-	## for now the str2var(var2str()) method has been used to bypass this. This should be changed to a 
-	## less sloppy and faster solution
+	# BUG_REPORT 
+	# The terrain_map was instantiated as a reference to the base_terrain_map instead of its copy,
+	# for now the str2var(var2str()) method has been used to bypass this. This should be changed to a 
+	# less sloppy and faster solution
 	var terrain_map = {}
 	terrain_map = str2var(var2str(base_terrain_map))
 	var charfillin = 100
@@ -67,4 +67,3 @@ func get_terrain_map():
 	for char in get_parent().get_node("Player2").get_children():
 		terrain_map[char.get_grid_pos()] = charfillin
 	return terrain_map
-	
