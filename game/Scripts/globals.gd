@@ -1,5 +1,6 @@
 extends Node
 
+# trying message and description
 var currentTurn = 1
 
 func matrix_init(nrow,ncol,fill):
