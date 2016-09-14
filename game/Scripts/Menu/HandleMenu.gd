@@ -17,13 +17,13 @@ func _unhandled_input(event):
 			get_tree().set_input_as_handled()
 			var selected_pos = TERRAIN.global2grid_coord(get_global_mouse_pos())
 			for Character in WORLD.get_node(WORLD.ACTIVE_PLAYER).get_children():
-				if (Character.get_grid_pos() == selected_pos and Character.ALIVE):
+				if (Character.get_grid_pos() == selected_pos and not Character.CHAR_STATE == "DISABLED"):
 					if (WORLD.get_state() == "Action_Select"):
 						WORLD.change_state("Char_Select")
 					Character.change_state("ACTIVE")
 					WORLD.ACTIVE_CHAR = Character
 					WORLD.change_state("Action_Select")
-					print("the char ", WORLD.ACTIVE_CHAR, " has ", WORLD.ACTIVE_CHAR.HP, " HP(s)")
+					# print("the char ", WORLD.ACTIVE_CHAR, " has ", WORLD.ACTIVE_CHAR.HP, " HP(s)")
 
 	if(event.is_action_pressed("ui_cancel")):
 		if (WORLD.get_state()=="Action_Select" and MENU.currentMenu == MENU.MenuList["MainMenu"]):

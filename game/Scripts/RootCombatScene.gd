@@ -20,7 +20,7 @@ func _ready():
 
 func change_state(newstate):
 
-	print("Changing state of TURN_STATE from ",self.TURN_STATE," to ",newstate)
+	# print("Changing state of TURN_STATE from ",self.TURN_STATE," to ",newstate)
 	
 	self.on_state_exit(self.TURN_STATE)
 	

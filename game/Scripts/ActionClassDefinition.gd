@@ -21,7 +21,8 @@ class Action:
 
 	var ROOT
 	var WORLD
-	var Player
+	var active_team
+	var passive_team
 	var Target
 	var ExecTurn
 	var Sender
@@ -36,7 +37,8 @@ class Action:
 		# define the sender as the char that generated this action
 		Sender = Char
 		# bond the player to the action he chooses
-		Player = WORLD.ACTIVE_PLAYER
+		active_team = WORLD.ACTIVE_PLAYER
+		passive_team = WORLD.INACTIVE_PLAYER
 		ExecTurn = 0 # TODO: this should be moved/modified in the specific action
 	
 	func accept_reply(reply):
@@ -89,7 +91,7 @@ class MoveAction:
 		Sender.reduce_AP(AP_cost)
 		#Sender.reduce_HP(HP_cost)
 		#Sender.reduce_MP(MP_cost)
-		print("sender AP reduced by ", AP_cost)
+		# print("sender AP reduced by ", AP_cost)
 		Sender.set_ghost_grid_pos(Target)
 		Sender.get_node("Ghost_Sprite").show()
 		ROOT.get_node("World/HUD/MenuSystem").reset()
@@ -99,8 +101,22 @@ class MoveAction:
 		ROOT.get_node("World").change_state("Action_Select")
 
 	func execute():
-		if (Sender.ALIVE):
-			print("Moving ", Sender.get_name(), " from cell ", Sender.get_grid_pos(), " to cell", Target)
+		if (not Sender.CHAR_STATE == "DISABLED"):
+			# print("Moving ", Sender.get_name(), " from cell ", Sender.get_grid_pos(), " to cell", Target)
+			# TODO: In the following it is not considered that even the rollback position could be occupied ...
+			# print("I'm ",Sender," of player ",active_team,", trying to go in cell ", Target)
+			for char in WORLD.get_node(passive_team).get_children(): # TODO: a while shoud be better
+				# print("char ",char," of player ",passive_team," is in ",char.get_grid_pos())
+				if (char.get_grid_pos() == Target): # position has been occupied by enemy in the same turn
+					# print("char ",char," of player ",passive_team," is occuping this position! ")
+					if (Sender.WEIGHT <= char.WEIGHT): # if the enemy is heavier TODO: the = case shoud be a special case (random choice)
+						# print("Oh, no, I'm too slim!")
+						Target[1] = Target[1] + 1 # TODO: change target properly
+					elif (Sender.WEIGHT > char.WEIGHT): # TODO: if the enemy is lighter
+						char.set_grid_pos(Vector2(Target[0]+1,Target[1])) # TODO: change his position properly
+						# print("Eheh, I'm heavier and char ",char," of player ",passive_team," should go in ",char.get_grid_pos())
+						char.set_ghost_grid_pos(char.get_grid_pos()) # change the ghost position as well
+			# print("so I go in ", Target)
 			Sender.set_grid_pos(Target)
 			Sender.set_ghost_grid_pos(Target)
 
@@ -158,17 +174,18 @@ class SimpleAttackAction:
 		send_action()
 
 	func execute():
-		if (Sender.ALIVE):
+		if (not Sender.CHAR_STATE == "DISABLED"): # TODO: how's "different from"? /=? or ~=?
 			for char in ROOT.get_tree().get_nodes_in_group("Characters"):
 				for tile in Target:
 					if tile == char.get_grid_pos():
-						print(str(char.get_name()," has been attacked"))
-						print(str("starting HP at ",char.get_HP()))
+						# print(str(char.get_name()," has been attacked"))
+						# print(str("starting HP at ",char.get_HP()))
 						char.modify_HP(-Damage)
-						print(str("Now HP at ",char.get_HP()))
+						# print(str("Now HP at ",char.get_HP()))
 						if (char.HP <= 0):
 							char.ALIVE = false
-							print("char ", char, " is dead")
+							char.CHAR_STATE = "DISABLED"
+							# print("char ", char, " is dead")
 
 
 #-------------------------------------------------------------------------------------------
