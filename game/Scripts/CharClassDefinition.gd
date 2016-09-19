@@ -4,7 +4,8 @@ class Character:
 
 	extends Node2D
 
-	var CHAR_STATES = ["IDLE", "ACTIVE"]
+	#var CHAR_STATES = ["IDLE", "ACTIVE"] # TODO: should contain the state SELECTABLE
+	var CHAR_STATES = ["IDLE", "ACTIVE", "DISABLED"]
 	var CHAR_STATE # TODO: maybe could be renamed simply as STATE
 	var ALIVE
 
@@ -16,6 +17,7 @@ class Character:
 	var CLASS_TYPE
 	var TEXTURE
 	var AVAIL_ACTIONS
+	var WEIGHT = 1
 	var AP
 	var HP
 	var MP
@@ -54,7 +56,7 @@ class Character:
 		if (CHAR_STATES.find(newstate)>-1):
 			self.on_state_exit(self.CHAR_STATE)
 
-			print("Changing state of ",self.get_name()," from ",self.CHAR_STATE," to ",newstate)
+			# print("Changing state of ",self.get_name()," from ",self.CHAR_STATE," to ",newstate)
 			CHAR_STATE = newstate
 
 			self.on_state_enter(newstate)
@@ -182,6 +184,7 @@ class Lancer:
 
 		CLASS_TYPE = "Lancer"
 		AVAIL_ACTIONS = ["Standard Attack","Sweep","Pierce","HammerDown"]
+		WEIGHT = WEIGHT + 2
 		MAX_HP = 6
 		MAX_AP = 5
 		MAX_MP = 0
@@ -214,8 +217,26 @@ class Archer:
 	func _init():
 
 		CLASS_TYPE = "Archer"
-		TEXTURE = ResourceLoader.load("res://Textures/Characters/cyanplayer_20x20pxl.tex")
 		AVAIL_ACTIONS = ["Shot", "TripleArrow"]
+
+		WEIGHT = WEIGHT + 1
 		MAX_HP = 5
 		MAX_AP = 4
 		MAX_MP = 0
+
+
+	func _ready():
+
+		if (self.TEAM == "P1"):
+			TEXTURE = ResourceLoader.load("res://Textures/Characters/blueplayer_20x20pxl.tex")
+		elif (self.TEAM == "P2"):
+			TEXTURE = ResourceLoader.load("res://Textures/Characters/redplayer_20x20pxl.tex")
+
+		# set the texture of the Archer character
+		# real texture
+		get_node("Sprite").set_texture(TEXTURE)
+		# ghost texture
+		get_node("Ghost_Sprite").set_texture(TEXTURE)
+		get_node("Ghost_Sprite").set_rotd(180)
+		get_node("Ghost_Sprite").set_opacity(.5)
+		get_node("Ghost_Sprite").hide()
