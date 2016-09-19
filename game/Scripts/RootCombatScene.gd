@@ -65,6 +65,7 @@ func on_state_enter(state):
 			INACTIVE_PLAYER = "Player1"
 		elif ACTIVE_PLAYER == "Player2":
 			get_node("MessageManager").process()
+			# controlla i morti e ricarica la scena
 			ACTIVE_PLAYER = "Player1"
 			INACTIVE_PLAYER = "Player2"
 			get_node("/root/globals").currentTurn += 1
