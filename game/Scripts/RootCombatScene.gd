@@ -46,7 +46,7 @@ func on_state_exit(state):
 
 func on_state_enter(state):
 	if (state == "Char_Select"):
-		for char in get_node(INACTIVE_PLAYER).get_children():
+		for char in get_node(INACTIVE_PLAYER).get_children(): # TODO: why only on INACTIVE_PLAYER?! Anyway I think it doesn't work!
 			char.get_node("Ghost_Sprite").hide()
 		ACTIVE_CHAR.change_state("IDLE")
 		ACTIVE_CHAR = null

@@ -98,19 +98,30 @@ class Character:
 		get_node("Ghost_Sprite").set_global_pos(TERRAIN.grid2global_coord(GHOST_GRID_POS))
 
 
-	func get_HP():
-		return HP
-	
-	func modify_HP(HPmod):
-		HP += HPmod
-
 	func get_AP():
 		return AP
 
+	func get_HP():
+		return HP
+
+	func get_MP():
+		return MP
+
+	func get_MAX_AP():
+		return MAX_AP
+
+	func get_MAX_HP():
+		return MAX_HP
+
+	func get_MAX_MP():
+		return MAX_MP
+	
+	func modify_HP(HPmod):
+		HP += HPmod
 	func reduce_AP(fatigue):
 		AP -= fatigue
 
-	func reset_status():
+	func reset_status(): # TODO: should be renamed as "reset_AP" (here and elsewhere)
 		AP = MAX_AP
 
 #=========================================================================================
