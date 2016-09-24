@@ -18,7 +18,6 @@ func _unhandled_input(event):
 			var selected_pos = TERRAIN.global2grid_coord(get_global_mouse_pos())
 			for Character in WORLD.get_node(WORLD.ACTIVE_PLAYER).get_children():
 				if (Character.get_grid_pos() == selected_pos and not Character.CHAR_STATE == "DISABLED"): # TODO: how's "different from"? /=? or ~=?
-
 					if (WORLD.get_state() == "Action_Select"):
 						WORLD.change_state("Char_Select")
 					Character.change_state("ACTIVE")

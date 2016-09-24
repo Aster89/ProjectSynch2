@@ -16,9 +16,8 @@ func _ready():
 func _process(delta):
 	var MPOS = get_viewport().get_mouse_pos()
 	if (MPOS.x < MIN_REACTIVE_LENGTH.x and MPOS.x > 5):
-		var tmppos
-		tmppos = get_pos()-Vector2(CAMERA_SPEED*delta,0)
-		if ( tmppos.x-CAMERA_SIZE.x/2 < 0):
+		var tmppos = get_pos()-Vector2(CAMERA_SPEED*delta,0)
+		if (tmppos.x-CAMERA_SIZE.x/2 < 0):
 			tmppos.x = CAMERA_SIZE.x/2
 		set_pos(tmppos)
 	

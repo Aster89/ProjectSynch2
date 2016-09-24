@@ -46,7 +46,7 @@ func on_state_exit(state):
 
 func on_state_enter(state):
 	if (state == "Char_Select"):
-		for char in get_node(INACTIVE_PLAYER).get_children():
+		for char in get_node(INACTIVE_PLAYER).get_children(): # TODO: why only on INACTIVE_PLAYER?! Anyway I think it doesn't work!
 			char.get_node("Ghost_Sprite").hide()
 		ACTIVE_CHAR.change_state("IDLE")
 		ACTIVE_CHAR = null
@@ -65,7 +65,15 @@ func on_state_enter(state):
 			INACTIVE_PLAYER = "Player1"
 		elif ACTIVE_PLAYER == "Player2":
 			get_node("MessageManager").process()
-			# controlla i morti e ricarica la scena
+			# check for dead player
+			for P in ["Player1", "Player2"]:
+				var still_alive = false
+				for char in get_node(P).get_children():
+					if char.ALIVE:
+						still_alive = true
+				if (not still_alive):
+					print(P, " loses!")
+					get_tree().change_scene("res://Scenes/CombatScene/RootCombatScene.scn")
 			ACTIVE_PLAYER = "Player1"
 			INACTIVE_PLAYER = "Player2"
 			get_node("/root/globals").currentTurn += 1
